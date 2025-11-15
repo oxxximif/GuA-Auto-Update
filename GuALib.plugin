@@ -30,7 +30,16 @@ class GuALib(BasePlugin):
 
     # Other settings
     def _other_fragment(self):
-        pass
+        return [
+            Header(text="Documentation"),
+            Divider(text="The documentation is available at the link: https://telegra.ph/GuA-Plugin-11-03"),
+            Header(text="Bugs"),
+            Divider(text="If you find a bug in the plugin, write to the @GuAgchat chat in the Bugs topic using the pinned form.\n\nIf the bug is critical, write to @oxxximif in private messages")
+            Header(text="Thanks"),
+            Divider(text="Thank you @QuantaPlugins for allowing us to use the QuantaHut features"),
+            Header(text="Developers"),
+            Divider(text="Main developers: @oxxximif")
+        ]
 
     # Channel Links
     def _create_ChannelLin_fragment(self):
