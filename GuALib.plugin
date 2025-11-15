@@ -82,7 +82,7 @@ class GuALib(BasePlugin):
             Header(text="GuALib settings"),
             Text(text="Download localization",icon="msg_translate",on_click=self._download_local),
             Text(text="Clear cache",icon="msg_clear",on_click=self._clear_cache),
-            Text(text="Other",icon="menu_devices",on_click=self._other_fragment),
+            Text(text="Other",icon="menu_devices",create_sub_fragment=self._other_fragment),
             Divider(),
             Header(text="Links"),
             Text(text="Channel",icon="msg_channel_solar",on_click=self._create_ChannelLin_fragment),
