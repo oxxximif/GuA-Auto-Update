@@ -5,6 +5,7 @@
 from base_plugin import BasePlugin
 from ui.settings import Divider, Header, Switch, Input, Text, Selector
 from android.view import View
+from client_utils import get_last_fragment
 
 # metedata
 __name__ = "GuALib"
