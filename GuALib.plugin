@@ -83,5 +83,5 @@ class GuALib(BasePlugin):
             Text(text="Channel",icon="msg_channel_solar",on_click=lambda v: self._create_ChannelLin_fragment()),
             Text(text="Chats",icon="msg2_discussion",on_click=lambda v: self._create_ChatsLin_fragment()),
             Text(text="Thanks to QuantaPlugins",icon="msg_input_like",on_click=lambda v: self._create_cost_fragment()),
-            Divider(text="Library for GuA | @GuAmain | @GuAgchat | @oxxximif")
+            Divider(text="Library for GuA | @GuAmain"),
         ] # qurovnya
