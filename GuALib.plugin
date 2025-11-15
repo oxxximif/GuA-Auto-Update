@@ -1,0 +1,20 @@
+# Library for GuA plugins
+# I would like to express my gratitude to @QuantaPlugins for allowing me to use QuantaHut features
+
+# import 
+
+from base_plugin import BasePlugin
+
+# metedata
+
+__name__ = "GuALib"
+__description__ = "**Library for GuA plugins** | Based on QuantaHut"
+__icon__ = "GuAIcons/0"
+__id__ = "gualib"
+__version__ = "1.0.0-beta"
+__author__ = "@oxxximif"
+__min_version__ = "12.1.1"
+__priority__ = 1
+
+class GuALib(BasePlugin):
+    pass
