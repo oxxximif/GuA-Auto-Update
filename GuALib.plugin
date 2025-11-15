@@ -2,11 +2,10 @@
 # I would like to express my gratitude to @QuantaPlugins for allowing me to use QuantaHut features
 
 # import 
-
 from base_plugin import BasePlugin
+from ui.settings import Divider, Header, Switch, Input, Text, Selector
 
 # metedata
-
 __name__ = "GuALib"
 __description__ = "**Library for GuA plugins** | Based on QuantaHut"
 __icon__ = "GuAIcons/0"
@@ -16,5 +15,78 @@ __author__ = "@oxxximif"
 __min_version__ = "12.1.1"
 __priority__ = 1
 
+# code
 class GuALib(BasePlugin):
-    pass
+
+    # localization
+    def _download_local(self):
+        pass
+
+    # Clear cache
+    def _clear_cache(self):
+        pass
+
+    # Other settings
+    def _other_fragment(self):
+        pass
+
+    # Channel Links
+    def _create_ChannelLin_fragment(self):
+        try:
+            from client_utils import get_last_fragment
+            from java import jclass
+            fragment = get_last_fragment()
+            if fragment:
+                MessagesController = jclass("org.telegram.messenger.MessagesController")
+                messages_controller = MessagesController.getInstance(0)
+                messages_controller.openByUserName("GuAmain", fragment, 1)
+        except Exception as e:
+            self.log(f"Error opening group: {e}")
+
+    # GuA Chat
+    def _create_ChatsLin_fragment(self):
+        try:
+            from client_utils import get_last_fragment
+            from java import jclass
+            fragment = get_last_fragment()
+            if fragment:
+                MessagesController = jclass("org.telegram.messenger.MessagesController")
+                messages_controller = MessagesController.getInstance(0)
+                messages_controller.openByUserName("GuAgchat", fragment, 1)
+        except Exception as e:
+            self.log(f"Error opening group: {e}")
+
+    # GitHub GuAplugin
+    def _create_GitHubLin_fragment(self):
+        from android.content import Intent
+        from android.net import Uri
+        intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/oxxximif/GuAplugin"))
+        get_last_fragment().getParentActivity().startActivity(intent)
+        
+    # QuantaPlugins
+    def _create_cost_fragment(self):
+        try:
+            from client_utils import get_last_fragment
+            from java import jclass
+            fragment = get_last_fragment()
+            if fragment:
+                MessagesController = jclass("org.telegram.messenger.MessagesController")
+                messages_controller = MessagesController.getInstance(0)
+                messages_controller.openByUserName("QuantaPlugins", fragment, 1)
+        except Exception as e:
+            self.log(f"Error opening group: {e}")  
+ 
+    # settings
+    def create_settings(self):
+        return [
+            Header(text="GuALib settings"),
+            Text(text="Download localization",icon="msg_translate",on_click=self._download_local),
+            Text(text="Clear cache",icon="msg_clear",on_click=self._clear_cache),
+            Text(text="Other",icon="menu_devices",on_click=self._other_fragment),
+            Divider(),
+            Header(text="Links"),
+            Text(text="Channel",icon="msg_channel_solar",on_click=self._create_ChannelLin_fragment),
+            Text(text="Chats",icon="msg2_discussion",on_click=self._create_ChatsLin_fragment),
+            Text(text="GitHub",icon="msg_input_like",on_click=self._create_GitHubLin_fragment),
+            Text(text="Thanks to QuantaPlugins",icon="msg_input_like",on_click=self._create_cost_fragment),
+        ]
