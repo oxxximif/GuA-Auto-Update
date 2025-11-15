@@ -86,8 +86,8 @@ class GuALib(BasePlugin):
             Text(text="Other",icon="menu_devices",create_sub_fragment=self._other_fragment),
             Divider(),
             Header(text="Links"),
-            Text(text="Channel",icon="msg_channel_solar",on_click=lambda v: self._create_ChannelLin_fragment),
-            Text(text="Chats",icon="msg2_discussion",on_click=lambda v: self._create_ChatsLin_fragment),
-            Text(text="GitHub",icon="msg_input_like",on_click=lambda v: self._create_GitHubLin_fragment),
-            Text(text="Thanks to QuantaPlugins",icon="msg_input_like",on_click=lambda v: self._create_cost_fragment),
-        ]
+            Text(text="Channel",icon="msg_channel_solar",on_click=lambda v: self._create_ChannelLin_fragment()),
+            Text(text="Chats",icon="msg2_discussion",on_click=lambda v: self._create_ChatsLin_fragment()),
+            Text(text="GitHub",icon="msg_input_like",on_click=lambda v: self._create_GitHubLin_fragment()),
+            Text(text="Thanks to QuantaPlugins",icon="msg_input_like",on_click=lambda v: self._create_cost_fragment()),
+        ] # qurovnya
