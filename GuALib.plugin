@@ -32,6 +32,81 @@ class GuALib(BasePlugin):
         self.log("GuA Deeplink")
         self._setup_deeplink_handling()
 
+    # localization
+    def _download_local(self):
+        pass
+
+    # Clear cache
+    def _clear_cache(self):
+        pass
+
+    # Other settings
+    def _other_fragment(self):
+        return [
+            Header(text="Documentation"),
+            Divider(text="The documentation is available at the link: https://telegra.ph/GuA-Plugin-11-03"),
+            Header(text="Bugs"),
+            Divider(text="If you find a bug in the plugin, write to the @GuAgchat chat in the Bugs topic using the pinned form.\n\nIf the bug is critical, write to @oxxximif in private messages"),
+            Header(text="Thanks"),
+            Divider(text="Thank you @QuantaPlugins for allowing us to use the QuantaHut features"),
+            Header(text="Developers"),
+            Divider(text="Main developers: @oxxximif")
+        ]
+
+    # Channel Links
+    def _create_ChannelLin_fragment(self):
+        try:
+            from client_utils import get_last_fragment
+            from java import jclass
+            fragment = get_last_fragment()
+            if fragment:
+                MessagesController = jclass("org.telegram.messenger.MessagesController")
+                messages_controller = MessagesController.getInstance(0)
+                messages_controller.openByUserName("GuAmain", fragment, 1)
+        except Exception as e:
+            self.log(f"Error opening group: {e}")
+
+    # GuA Chat
+    def _create_ChatsLin_fragment(self):
+        try:
+            from client_utils import get_last_fragment
+            from java import jclass
+            fragment = get_last_fragment()
+            if fragment:
+                MessagesController = jclass("org.telegram.messenger.MessagesController")
+                messages_controller = MessagesController.getInstance(0)
+                messages_controller.openByUserName("GuAgchat", fragment, 1)
+        except Exception as e:
+            self.log(f"Error opening group: {e}")
+        
+    # QuantaPlugins
+    def _create_cost_fragment(self):
+        try:
+            from client_utils import get_last_fragment
+            from java import jclass
+            fragment = get_last_fragment()
+            if fragment:
+                MessagesController = jclass("org.telegram.messenger.MessagesController")
+                messages_controller = MessagesController.getInstance(0)
+                messages_controller.openByUserName("QuantaPlugins", fragment, 1)
+        except Exception as e:
+            self.log(f"Error opening group: {e}")  
+ 
+    # settings
+    def create_settings(self):
+        return [
+            Header(text="GuALib settings"),
+            Text(text="Download localization",icon="msg_translate",on_click=lambda v: self._download_local()),
+            Text(text="Clear cache",icon="msg_clear",on_click=self._clear_cache),
+            Text(text="Other",icon="menu_devices",create_sub_fragment=self._other_fragment),
+            Divider(),
+            Header(text="Links"),
+            Text(text="Channel",icon="msg_channel_solar",on_click=lambda v: self._create_ChannelLin_fragment()),
+            Text(text="Chats",icon="msg2_discussion",on_click=lambda v: self._create_ChatsLin_fragment()),
+            Text(text="Thanks to QuantaPlugins",icon="msg_input_like",on_click=lambda v: self._create_cost_fragment()),
+            Divider(text="Library for GuA | @GuAmain"),
+        ] # qurovnya
+    
     # DeepLink
     def _setup_deeplink_handling(self):
         try:
@@ -114,78 +189,3 @@ class GuADeeplinkHook:
             except:
                 pass
         self.log("GuA Deeplink плагин выгружен")
-
-    # localization
-    def _download_local(self):
-        pass
-
-    # Clear cache
-    def _clear_cache(self):
-        pass
-
-    # Other settings
-    def _other_fragment(self):
-        return [
-            Header(text="Documentation"),
-            Divider(text="The documentation is available at the link: https://telegra.ph/GuA-Plugin-11-03"),
-            Header(text="Bugs"),
-            Divider(text="If you find a bug in the plugin, write to the @GuAgchat chat in the Bugs topic using the pinned form.\n\nIf the bug is critical, write to @oxxximif in private messages"),
-            Header(text="Thanks"),
-            Divider(text="Thank you @QuantaPlugins for allowing us to use the QuantaHut features"),
-            Header(text="Developers"),
-            Divider(text="Main developers: @oxxximif")
-        ]
-
-    # Channel Links
-    def _create_ChannelLin_fragment(self):
-        try:
-            from client_utils import get_last_fragment
-            from java import jclass
-            fragment = get_last_fragment()
-            if fragment:
-                MessagesController = jclass("org.telegram.messenger.MessagesController")
-                messages_controller = MessagesController.getInstance(0)
-                messages_controller.openByUserName("GuAmain", fragment, 1)
-        except Exception as e:
-            self.log(f"Error opening group: {e}")
-
-    # GuA Chat
-    def _create_ChatsLin_fragment(self):
-        try:
-            from client_utils import get_last_fragment
-            from java import jclass
-            fragment = get_last_fragment()
-            if fragment:
-                MessagesController = jclass("org.telegram.messenger.MessagesController")
-                messages_controller = MessagesController.getInstance(0)
-                messages_controller.openByUserName("GuAgchat", fragment, 1)
-        except Exception as e:
-            self.log(f"Error opening group: {e}")
-        
-    # QuantaPlugins
-    def _create_cost_fragment(self):
-        try:
-            from client_utils import get_last_fragment
-            from java import jclass
-            fragment = get_last_fragment()
-            if fragment:
-                MessagesController = jclass("org.telegram.messenger.MessagesController")
-                messages_controller = MessagesController.getInstance(0)
-                messages_controller.openByUserName("QuantaPlugins", fragment, 1)
-        except Exception as e:
-            self.log(f"Error opening group: {e}")  
- 
-    # settings
-    def create_settings(self):
-        return [
-            Header(text="GuALib settings"),
-            Text(text="Download localization",icon="msg_translate",on_click=lambda v: self._download_local()),
-            Text(text="Clear cache",icon="msg_clear",on_click=self._clear_cache),
-            Text(text="Other",icon="menu_devices",create_sub_fragment=self._other_fragment),
-            Divider(),
-            Header(text="Links"),
-            Text(text="Channel",icon="msg_channel_solar",on_click=lambda v: self._create_ChannelLin_fragment()),
-            Text(text="Chats",icon="msg2_discussion",on_click=lambda v: self._create_ChatsLin_fragment()),
-            Text(text="Thanks to QuantaPlugins",icon="msg_input_like",on_click=lambda v: self._create_cost_fragment()),
-            Divider(text="Library for GuA | @GuAmain"),
-        ] # qurovnya
