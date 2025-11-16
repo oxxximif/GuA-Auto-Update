@@ -125,9 +125,9 @@ class GuALib(BasePlugin):
             )
             method.setAccessible(True)
             self.hook_ref = self.hook_method(method, GuADeeplinkHook(self))
-            self.log("Deeplink хук установлен успешно")
+            self.log("deeplink loading")
         except Exception as e:
-            self.log(f"Ошибка установки deeplink хука: {e}")
+            self.log(f"eror deeplink: {e}")
 
     def _handle_gua_deeplink(self, uri: str):
         try:
@@ -136,26 +136,24 @@ class GuALib(BasePlugin):
             params = parse_qs(parsed.query)
 
             if path == "update" or "update" in params:
-                BulletinHelper.show_success("♡ GuA update check triggered via tg://gua/update")
-
+                BulletinHelper.show_success("GuA update check")
             elif path == "donate" or path == "support":
-                BulletinHelper.show_success("♡ Спасибо за поддержку GuA! Донат-шит открыт через tg://gua/donate")
-
-            elif path == "settings":
-                from com.exteragram.messenger.plugins import PluginsController
-                PluginsController.getInstance().openPluginSettings("gualib")
-                BulletinHelper.show_info("Открыты настройки по tg://gua/settings")
-
-            elif "start" in params:
-                start_param = params["start"][0]
-                BulletinHelper.show_success(f"♡ GuA deeplink с параметром: {start_param}")
-
+                BulletinHelper.show_success("Support test")
+            elif path == "localization":
+                BulletinHelper.show_success("Download local")
             else:
-                BulletinHelper.show_success("♡ tg://gua deeplink успешно обработан! @GuAplm")
+                BulletinHelper.show_success("GuA info test")
 
         except Exception as e:
             self.log(f"Ошибка обработки deeplink: {e}")
 
+    def on_plugin_unload(self):
+        if self.hook_ref:
+            try:
+                self.unhook_method(self.hook_ref)
+            except:
+                pass
+        self.log("GuA Deeplink плагин выгружен")
 
 class GuADeeplinkHook:
     def __init__(self, plugin):
@@ -180,12 +178,3 @@ class GuADeeplinkHook:
 
         except Exception as e:
             self.plugin.log(f"GuA deeplink hook error: {e}")
-
-
-    def on_plugin_unload(self):
-        if self.hook_ref:
-            try:
-                self.unhook_method(self.hook_ref)
-            except:
-                pass
-        self.log("GuA Deeplink плагин выгружен")
