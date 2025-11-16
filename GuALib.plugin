@@ -31,7 +31,6 @@ class GuALib(BasePlugin):
     def on_plugin_load(self):
         self.log("GuA Deeplink")
         self._setup_deeplink_handling()
-        self._handle_gualib_deeplink()
 
     # localization
     def _download_local(self):
@@ -130,22 +129,6 @@ class GuALib(BasePlugin):
         except Exception as e:
             self.log(f"eror deeplink: {e}")
 
-    def _handle_gualib_deeplink(self, uri: str):
-        try:
-            parsed = urlparse(uri)
-            path = parsed.path.lower().lstrip("/") if parsed.path else ""
-            params = parse_qs(parsed.query)
-
-            if path == "update" or "updates" in params:
-                BulletinHelper.show_success("GuA update check")
-            elif path == "update/changes" or path == "updates/changes":
-                BulletinHelper.show_success("info update")
-            else:
-                BulletinHelper.show_success("GuALib info test")
-
-        except Exception as e:
-            self.log(f"eror deeplink: {e}")
-
     def _handle_gua_deeplink(self, uri: str):
         try:
             parsed = urlparse(uri)
@@ -154,6 +137,8 @@ class GuALib(BasePlugin):
 
             if path == "update" or "update" in params:
                 BulletinHelper.show_success("GuA update check")
+            elif path == "update/changes" or path == "updates/changes":
+                BulletinHelper.show_success("info update")
             elif path == "donate" or path == "support":
                 BulletinHelper.show_success("Support test")
             elif path == "localization":
@@ -192,11 +177,6 @@ class GuADeeplinkHook:
                 param.setResult(True)
 
                 run_on_ui_thread(lambda: self.plugin._handle_gua_deeplink(uri))
-
-            if uri_lower.startswith("tg://gualib"):
-                param.setResult(True)
-
-                run_on_ui_thread(lambda: self.plugin._handle_gualib_deeplink(uri))
 
         except Exception as e:
             self.plugin.log(f"GuA deeplink hook error: {e}")
