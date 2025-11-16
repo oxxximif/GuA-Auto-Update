@@ -3,8 +3,12 @@
 
 # import 
 from base_plugin import BasePlugin
-from ui.settings import Divider, Header, Switch, Input, Text, Selector
+from ui.settings import Divider, Header, Text
 from android.view import View
+from android_utils import log, run_on_ui_thread
+from ui.bulletin import BulletinHelper
+from hook_utils import find_class
+from urllib.parse import urlparse, parse_qs
 from client_utils import get_last_fragment
 
 # metedata
@@ -19,6 +23,96 @@ __priority__ = 1
 
 # code
 class GuALib(BasePlugin):
+
+    def __init__(self):
+        super().__init__()
+        self.hook_ref = None
+
+    def on_plugin_load(self):
+        self.log("GuA Deeplink")
+        self._setup_deeplink_handling()
+
+    def _setup_deeplink_handling(self):
+        try:
+            LaunchActivity = find_class("org.telegram.ui.LaunchActivity")
+            if not LaunchActivity:
+                return
+
+            method = LaunchActivity.getClass().getDeclaredMethod("handleIntent",
+                find_class("android.content.Intent"),
+                find_class("java.lang.Boolean").TYPE,
+                find_class("java.lang.Boolean").TYPE,
+                find_class("java.lang.Boolean").TYPE,
+                find_class("org.telegram.messenger.browser.Browser$Progress"),
+                find_class("java.lang.Boolean").TYPE,
+                find_class("java.lang.Boolean").TYPE
+            )
+            method.setAccessible(True)
+            self.hook_ref = self.hook_method(method, GuADeeplinkHook(self))
+            self.log("Deeplink хук установлен успешно")
+        except Exception as e:
+            self.log(f"Ошибка установки deeplink хука: {e}")
+
+    def _handle_gua_deeplink(self, uri: str):
+        try:
+            parsed = urlparse(uri)
+            path = parsed.path.lower().lstrip("/") if parsed.path else ""
+            params = parse_qs(parsed.query)
+
+            if path == "update" or "update" in params:
+                BulletinHelper.show_success("♡ GuA update check triggered via tg://gua/update")
+
+            elif path == "donate" or path == "support":
+                BulletinHelper.show_success("♡ Спасибо за поддержку GuA! Донат-шит открыт через tg://gua/donate")
+
+            elif path == "settings":
+                from com.exteragram.messenger.plugins import PluginsController
+                PluginsController.getInstance().openPluginSettings("gualib")
+                BulletinHelper.show_info("Открыты настройки по tg://gua/settings")
+
+            elif "start" in params:
+                start_param = params["start"][0]
+                BulletinHelper.show_success(f"♡ GuA deeplink с параметром: {start_param}")
+
+            else:
+                BulletinHelper.show_success("♡ tg://gua deeplink успешно обработан! @GuAplm")
+
+        except Exception as e:
+            self.log(f"Ошибка обработки deeplink: {e}")
+
+
+class GuADeeplinkHook:
+    def __init__(self, plugin):
+        self.plugin = plugin
+
+    def before_hooked_method(self, param):
+        try:
+            intent = param.args[0]
+            if not intent:
+                return
+
+            uri = intent.getDataString()
+            if not uri:
+                return
+
+            uri_lower = uri.lower()
+
+            if uri_lower.startswith("tg://gua"):
+                param.setResult(True)
+
+                run_on_ui_thread(lambda: self.plugin._handle_gua_deeplink(uri))
+
+        except Exception as e:
+            self.plugin.log(f"GuA deeplink hook error: {e}")
+
+
+    def on_plugin_unload(self):
+        if self.hook_ref:
+            try:
+                self.unhook_method(self.hook_ref)
+            except:
+                pass
+        self.log("GuA Deeplink плагин выгружен")
 
     # localization
     def _download_local(self):
@@ -84,7 +178,7 @@ class GuALib(BasePlugin):
     def create_settings(self):
         return [
             Header(text="GuALib settings"),
-            Text(text="Download localization",icon="msg_translate",on_click=self._download_local),
+            Text(text="Download localization",icon="msg_translate",on_click=lambda v: self._download_local()),
             Text(text="Clear cache",icon="msg_clear",on_click=self._clear_cache),
             Text(text="Other",icon="menu_devices",create_sub_fragment=self._other_fragment),
             Divider(),
