@@ -32,6 +32,7 @@ class GuALib(BasePlugin):
         self.log("GuA Deeplink")
         self._setup_deeplink_handling()
 
+    # DeepLink
     def _setup_deeplink_handling(self):
         try:
             LaunchActivity = find_class("org.telegram.ui.LaunchActivity")
